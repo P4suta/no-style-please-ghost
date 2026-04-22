@@ -1,0 +1,15 @@
+# zizmor configuration (docs.zizmor.sh/configuration/).
+#
+# We deliberately disable `unpinned-uses` across every workflow. The
+# rule prefers commit-SHA pinning for `uses:` references (e.g.
+# `actions/checkout@<40-char-sha>`), which trades supply-chain strength
+# against update ergonomics. Our policy (see repo README / memory)
+# is the opposite direction: track major tags (`@v5`, `@v6`), let
+# Dependabot bump minors weekly, and accept the small Tag Mutability
+# risk so we stay on the current line of each action without manual
+# sha refreshes. zizmor still reports every other audit class.
+
+rules:
+  unpinned-uses:
+    ignore:
+      - "*"
