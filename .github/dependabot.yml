@@ -19,8 +19,12 @@ updates:
       npm-major:
         update-types: ["major"]
 
-  # Images referenced by compose.yaml (ghost, mysql)
-  - package-ecosystem: "docker"
+  # Images referenced by compose.yaml (ghost, mysql).
+  # `docker-compose` is GA since 2025-02-25 (github.blog/changelog/
+  # 2025-02-25-dependabot-version-updates-now-support-docker-compose-
+  # in-general-availability). The legacy `docker` ecosystem only
+  # scans Dockerfiles / Kubernetes YAML, neither of which this repo has.
+  - package-ecosystem: "docker-compose"
     directory: "/"
     schedule:
       interval: weekly
