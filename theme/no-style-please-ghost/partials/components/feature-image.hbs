@@ -1,0 +1,31 @@
+{{!-- Shared responsive feature/cover image partial. Emits the srcset
+  unconditionally — callers are expected to guard the include with their
+  own `{{#if feature_image}}` / `{{#if cover_image}}` check. Writing the
+  guard here breaks GScan's static variable inspection (it only knows
+  about `feature_image`, `profile_image`, `cover_image`).
+
+  Callers pass:
+    image          the image URL (required)
+    alt            preferred alt text (e.g. feature_image_alt)
+    fallback_alt   used when `alt` is empty (e.g. post title)
+    caption        optional HTML caption (feature_image_caption)
+
+  Six srcset widths match package.json image_sizes (xs→xxl) and request
+  WebP to shrink transfer. --}}
+<figure>
+  <img
+    srcset="{{img_url image size="xs" format="webp"}} 160w,
+            {{img_url image size="s" format="webp"}} 320w,
+            {{img_url image size="m" format="webp"}} 600w,
+            {{img_url image size="l" format="webp"}} 960w,
+            {{img_url image size="xl" format="webp"}} 1200w,
+            {{img_url image size="xxl" format="webp"}} 2000w"
+    sizes="(min-width: 640px) 640px, 92vw"
+    src="{{img_url image size="l" format="webp"}}"
+    alt="{{#if alt}}{{alt}}{{else}}{{fallback_alt}}{{/if}}"
+    loading="lazy"
+  />
+  {{#if caption}}
+    <figcaption>{{{caption}}}</figcaption>
+  {{/if}}
+</figure>

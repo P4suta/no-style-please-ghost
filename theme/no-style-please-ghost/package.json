@@ -1,0 +1,74 @@
+{
+  "name": "no-style-please-ghost",
+  "description": "A (nearly) no-CSS, fast, minimalist Ghost theme. Ported from riggraz/no-style-please.",
+  "version": "0.1.0",
+  "engines": {
+    "ghost": ">=6.0.0"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "no-style-please-ghost contributors",
+    "email": "noreply@example.com"
+  },
+  "keywords": [
+    "ghost-theme",
+    "minimal",
+    "no-style",
+    "accessibility"
+  ],
+  "config": {
+    "posts_per_page": 25,
+    "card_assets": true,
+    "image_sizes": {
+      "xs": {
+        "width": 160
+      },
+      "s": {
+        "width": 320
+      },
+      "m": {
+        "width": 600
+      },
+      "l": {
+        "width": 960
+      },
+      "xl": {
+        "width": 1200
+      },
+      "xxl": {
+        "width": 2000
+      }
+    },
+    "custom": {
+      "show_featured_posts": {
+        "type": "boolean",
+        "default": false,
+        "group": "homepage"
+      },
+      "heading_font": {
+        "type": "select",
+        "options": [
+          "Monospace (original)",
+          "M PLUS 1 Code",
+          "Noto Sans JP",
+          "Noto Serif JP",
+          "System sans-serif",
+          "System serif"
+        ],
+        "default": "Monospace (original)"
+      },
+      "body_font": {
+        "type": "select",
+        "options": [
+          "Monospace (original)",
+          "M PLUS 1 Code",
+          "Noto Sans JP",
+          "Noto Serif JP",
+          "System sans-serif",
+          "System serif"
+        ],
+        "default": "Monospace (original)"
+      }
+    }
+  }
+}

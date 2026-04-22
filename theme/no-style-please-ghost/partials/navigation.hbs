@@ -1,0 +1,12 @@
+{{!-- Override for Ghost's built-in {{navigation}} helper. Emits a plain
+  <ul>/<li>/<a> so the theme stays unstyled. The helper already exposes
+  `navigation`, `slug`, `label`, `url`, and `current`. --}}
+{{#if navigation}}
+  <ul>
+    {{#foreach navigation}}
+      <li class="nav-{{slug}}{{#if current}} nav-current{{/if}}">
+        <a href="{{url absolute="true"}}">{{label}}</a>
+      </li>
+    {{/foreach}}
+  </ul>
+{{/if}}

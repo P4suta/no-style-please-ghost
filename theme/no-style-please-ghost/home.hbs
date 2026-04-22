@@ -1,0 +1,41 @@
+{{!< default}}
+
+<header>
+  <h1>{{@site.title}}</h1>
+  {{#if @site.description}}
+    <p>{{@site.description}}</p>
+  {{/if}}
+</header>
+
+{{> menu}}
+
+{{!-- Optional featured section. `show_featured_posts` lives under the
+  `homepage` group in package.json so it only shows up in the admin's
+  Homepage custom settings tab (per Ghost's config.custom `group` spec).
+  Public filter + id:-featured excludes gated posts from a public hero. --}}
+{{#if @custom.show_featured_posts}}
+  {{#get "posts"
+    filter="featured:true+visibility:public"
+    limit="3"
+    as |featured|}}
+    {{#if featured}}
+      <section class="featured">
+        <h2>{{t "Featured"}}</h2>
+        <ul>
+          {{#foreach featured}}
+            <li>
+              <span>
+                <time datetime="{{date published_at format="YYYY-MM-DD"}}">{{date published_at format="YYYY-MM-DD"}}</time>
+              </span>
+              <a href="{{url}}">{{title}}</a>
+            </li>
+          {{/foreach}}
+        </ul>
+      </section>
+    {{/if}}
+  {{/get}}
+{{/if}}
+
+{{> post-list}}
+
+{{pagination}}

@@ -1,0 +1,10 @@
+{{!-- Rendered inside a {{#post}} block context. Ghost's {{authors}}
+  helper returns a comma-separated list that honours multi-author posts
+  and falls back to the primary author automatically. `autolink="true"`
+  wraps each name in an <a> so reader can jump to the author page — we
+  keep it enabled because the author archive is a first-class feature. --}}
+{{#if primary_author}}
+  <p class="post-author">
+    {{{t "By {authors}" authors=(authors autolink="true" separator=", ")}}}
+  </p>
+{{/if}}

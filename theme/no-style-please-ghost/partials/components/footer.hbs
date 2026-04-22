@@ -1,0 +1,33 @@
+{{!-- Site-wide footer. All feature toggles are guarded on the admin's
+  Members setting: when Members is disabled the entire signup / portal
+  block disappears, matching Source's `{{#if @site.members_enabled}}`
+  pattern. "Powered by {ghostlink}" mirrors Ghost's recommended
+  attribution (see Source footer.hbs + `Powered by {ghostlink}` key in
+  the shared translations). --}}
+<footer class="site-footer">
+  {{#if @site.members_enabled}}
+    {{#unless @member}}
+      <section>
+        {{> "components/newsletter" email_field_id="footer-email"}}
+      </section>
+    {{/unless}}
+
+    <nav aria-label="{{t "Account"}}">
+      <ul>
+        {{#unless @member}}
+          <li><a href="#/portal/signin" data-portal="signin">{{t "Sign in"}}</a></li>
+          {{#unless @site.members_invite_only}}
+            <li><a href="#/portal/signup" data-portal="signup">{{t "Subscribe"}}</a></li>
+          {{/unless}}
+        {{else}}
+          <li><a href="#/portal/account" data-portal="account">{{t "Account"}}</a></li>
+        {{/unless}}
+        <li>{{> "components/search-toggle"}}</li>
+      </ul>
+    </nav>
+  {{else}}
+    {{> "components/search-toggle"}}
+  {{/if}}
+
+  <p>{{{t "Powered by {ghostlink}" ghostlink="<a href=\"https://ghost.org/\" target=\"_blank\" rel=\"noopener\">Ghost</a>"}}}</p>
+</footer>

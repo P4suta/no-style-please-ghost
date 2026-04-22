@@ -1,0 +1,50 @@
+/* Dark-mode trick from the upstream no-style-please theme: invert the
+ * whole page, then undo the inversion on images so photos stay correct.
+ * Two code paths are needed because `body[a="auto"]` should only flip
+ * when the OS preference agrees, whereas `body[a="dark"]` is
+ * unconditional. The rule body is identical between the two.
+ */
+
+@layer base {
+  body[a="dark"] {
+    filter: invert(1);
+
+    & img {
+      filter: invert(1);
+    }
+
+    & img.ioda {
+      filter: invert(0);
+    }
+
+    & .emoji {
+      filter: invert(1);
+    }
+
+    & iframe {
+      filter: invert(1);
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body[a="auto"] {
+      filter: invert(1);
+
+      & img {
+        filter: invert(1);
+      }
+
+      & img.ioda {
+        filter: invert(0);
+      }
+
+      & .emoji {
+        filter: invert(1);
+      }
+
+      & iframe {
+        filter: invert(1);
+      }
+    }
+  }
+}

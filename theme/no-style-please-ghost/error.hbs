@@ -1,0 +1,11 @@
+{{!< default}}
+
+{{> back-link}}
+
+<h1>{{statusCode}} &middot; {{message}}</h1>
+
+<p><a href="{{@site.url}}/">{{t "Go to the front page"}}</a></p>
+
+{{#if error.stack}}
+  <pre><code>{{error.stack}}</code></pre>
+{{/if}}

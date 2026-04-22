@@ -1,0 +1,35 @@
+/* Container + Ghost Koenig editor width modifiers. Deliberately minimal —
+ * the no-style-please philosophy is to stay close to browser defaults.
+ */
+
+@layer layout {
+  .w {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+  }
+
+  .kg-width-wide,
+  .kg-width-wide img {
+    max-width: 85vw;
+  }
+
+  .kg-width-full,
+  .kg-width-full img {
+    max-width: 100vw;
+  }
+
+  figure {
+    margin: 1.5rem 0;
+  }
+
+  figcaption {
+    text-align: center;
+    font-size: 0.9em;
+    margin-top: 0.4rem;
+  }
+
+  .post-meta {
+    text-align: right;
+  }
+}

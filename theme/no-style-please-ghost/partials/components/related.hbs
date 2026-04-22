@@ -1,0 +1,26 @@
+{{!-- "Read next" section. Pulls up to three other posts that share the
+  current post's primary_tag. `id:-{{id}}` excludes the current post so
+  it doesn't recommend itself. The `as |related|` block parameter lets
+  us only emit the <section> when at least one related post exists.
+  Invoked inside a `{{#post}}` block so primary_tag / id are in scope. --}}
+{{#if primary_tag}}
+  {{#get "posts"
+    filter="primary_tag:{{primary_tag.slug}}+id:-{{id}}"
+    limit="3"
+    include="authors"
+    as |related|}}
+    {{#if related}}
+      <section class="read-next" aria-label="{{t "Read next"}}">
+        <h2>{{t "Read next"}}</h2>
+        <ul>
+          {{#foreach related}}
+            <li>
+              <time datetime="{{date published_at format="YYYY-MM-DD"}}">{{date published_at format="YYYY-MM-DD"}}</time>
+              <a href="{{url}}">{{title}}</a>
+            </li>
+          {{/foreach}}
+        </ul>
+      </section>
+    {{/if}}
+  {{/get}}
+{{/if}}

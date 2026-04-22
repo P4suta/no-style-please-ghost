@@ -1,0 +1,64 @@
+{{!< default}}
+
+{{#post}}
+  {{> back-link}}
+
+  <article class="{{post_class}}">
+    <header>
+      <p class="post-meta">
+        <time datetime="{{date published_at format="YYYY-MM-DDTHH:mm:ssZ"}}">{{date published_at format="YYYY-MM-DD"}}</time>
+        {{#match updated_at "!=" published_at}}
+          &middot;
+          {{t "Updated"}}
+          <time datetime="{{date updated_at format="YYYY-MM-DDTHH:mm:ssZ"}}">{{date updated_at format="YYYY-MM-DD"}}</time>
+        {{/match}}
+        &middot;
+        <span>{{reading_time minute=(t "1 min read") minutes=(t "% min read")}}</span>
+        {{#if primary_tag}}
+          &middot;
+          <a href="{{primary_tag.url}}">{{primary_tag.name}}</a>
+        {{/if}}
+      </p>
+
+      <h1>{{title}}</h1>
+    </header>
+
+    {{#if feature_image}}
+      {{> "components/feature-image"
+        image=feature_image
+        alt=feature_image_alt
+        fallback_alt=title
+        caption=feature_image_caption}}
+    {{/if}}
+
+    {{content}}
+
+    {{!-- Paywall CTA. Ghost's content helper already truncates gated
+      post bodies; this block tells the visitor why and where to go next.
+      visibility distinguishes paid vs any-members gates. --}}
+    {{#unless access}}
+      <aside class="paywall">
+        {{#match visibility "paid"}}
+          <p>{{t "This post is for paying subscribers only"}}</p>
+        {{else}}
+          <p>{{t "This post is for subscribers only"}}</p>
+        {{/match}}
+        <p><a href="#/portal/signup" data-portal="signup">{{t "Subscribe"}}</a></p>
+      </aside>
+    {{/unless}}
+
+    <footer class="post-footer">
+      {{> "components/author-footer"}}
+
+      {{#if tags}}
+        <p class="post-tags">{{t "Tagged:"}} {{tags separator=", "}}</p>
+      {{/if}}
+    </footer>
+  </article>
+
+  {{> "components/prev-next"}}
+
+  {{> "components/related"}}
+
+  {{comments}}
+{{/post}}

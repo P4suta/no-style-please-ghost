@@ -1,0 +1,19 @@
+{
+  "name": "no-style-please-ghost-dev",
+  "private": true,
+  "description": "Dev tooling for the no-style-please-ghost theme (bun + biome + lightningcss + gscan).",
+  "license": "MIT",
+  "scripts": {
+    "check": "biome check .",
+    "check:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "lint": "biome lint .",
+    "build:css": "lightningcss --bundle --minify --targets '>= 0.5%' theme/no-style-please-ghost/src/css/style.css -o theme/no-style-please-ghost/assets/css/style.css",
+    "watch:css": "lightningcss --bundle --targets '>= 0.5%' --watch theme/no-style-please-ghost/src/css/style.css -o theme/no-style-please-ghost/assets/css/style.css"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "*",
+    "lightningcss-cli": "*"
+  }
+}

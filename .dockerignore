@@ -1,0 +1,12 @@
+.git
+.github
+.gitignore
+.dockerignore
+.env
+.env.local
+docs
+README.md
+LICENSE
+NOTICE
+Taskfile.yml
+node_modules

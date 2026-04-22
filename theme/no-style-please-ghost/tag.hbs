@@ -1,0 +1,25 @@
+{{!< default}}
+
+{{> back-link}}
+
+{{#tag}}
+  <h1>{{name}}</h1>
+
+  {{#if feature_image}}
+    {{> "components/feature-image"
+      image=feature_image
+      fallback_alt=name}}
+  {{/if}}
+
+  {{#if description}}
+    <p>{{description}}</p>
+  {{/if}}
+
+  {{#if count.posts}}
+    <p class="tag-meta">{{count.posts}}</p>
+  {{/if}}
+{{/tag}}
+
+{{> post-list}}
+
+{{pagination}}

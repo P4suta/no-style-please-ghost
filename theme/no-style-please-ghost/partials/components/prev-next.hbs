@@ -1,0 +1,12 @@
+{{!-- Prev/next sibling post navigation. `{{#prev_post}}` / `{{#next_post}}`
+  are Ghost's built-in block helpers; each renders its body only when a
+  sibling exists. Outside a `{{#post}}` block these are no-ops, so this
+  partial is safe to `{{> ...}}` include anywhere. --}}
+<nav class="post-navigation" aria-label="{{t "Read next"}}">
+  {{#prev_post}}
+    <a href="{{url}}" rel="prev">{{t "Previous post"}}: {{title}}</a>
+  {{/prev_post}}
+  {{#next_post}}
+    <a href="{{url}}" rel="next">{{t "Next post"}}: {{title}}</a>
+  {{/next_post}}
+</nav>

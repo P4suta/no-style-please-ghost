@@ -1,0 +1,34 @@
+no-style-please-ghost
+=====================
+
+This project is a Ghost port of the Jekyll theme "no-style-please" by
+Riccardo Graziosi (https://github.com/riggraz/no-style-please), originally
+released under the MIT License with the following copyright notice:
+
+    Copyright (c) 2020 Riccardo Graziosi
+
+The CSS under `theme/no-style-please-ghost/assets/css/style.css` and the
+overall template structure are derivative works of that project. The Ghost
+Handlebars templates were written fresh for this port but follow the same
+naming and responsibilities as the original Liquid layouts.
+
+Reference implementation (for a second opinion on structure):
+    hanwenguo/hugo-theme-nostyleplease — a Hugo port, also MIT-licensed.
+
+------------------------------------------------------------------------
+
+Bundled fonts (under theme/no-style-please-ghost/assets/fonts/, all SIL
+Open Font License 1.1; see the corresponding *-OFL.txt files):
+
+    - M PLUS 1 Code
+      Copyright 2021 The M PLUS Project Authors
+      (https://github.com/coz-m/MPLUS_FONTS)
+
+    - Noto Sans JP
+      Copyright 2012 Google Inc. All Rights Reserved.
+      (https://fonts.google.com/noto/specimen/Noto+Sans+JP)
+
+    - Noto Serif JP
+      Copyright 2014-2021 Adobe (http://www.adobe.com/), with Reserved
+      Font Name 'Source'
+      (https://fonts.google.com/noto/specimen/Noto+Serif+JP)

@@ -1,0 +1,152 @@
+/* Ghost feature components. Every rule is deliberately plain: no colors
+ * beyond currentColor, no decorative icons, no transitions. The
+ * dark-mode trick in dark-mode.css does the heavy lifting — it inverts
+ * form controls, buttons, and borders along with the rest of the page,
+ * so these rules only need to be correct in the light palette.
+ */
+
+@layer components {
+  /* Shared list-strip for `<ul>` inside `.read-next` or the footer nav.
+   * `:where()` keeps specificity at (0, 0, 1); kept at the top of the
+   * component layer so later, more-specific rules (`.site-footer nav
+   * ul { display: flex }`) cascade normally without triggering
+   * descending-specificity warnings.
+   */
+  :where(.read-next, .site-footer nav) ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  /* Members-only sigil appended in post-list.hbs. Slightly dimmed to
+   * read as metadata without adding a colored badge.
+   */
+  .members-only {
+    opacity: 0.7;
+  }
+
+  /* Tag / author archive meta (post count line). */
+  .tag-meta,
+  .author-meta {
+    opacity: 0.7;
+    font-size: 0.9em;
+  }
+
+  /* Featured homepage block. `featured:true` posts above the main feed. */
+  .featured {
+    margin-bottom: 2rem;
+  }
+
+  /* Post footer — author byline + tag list live here. */
+  .post-footer {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: thin solid currentColor;
+  }
+
+  .post-author,
+  .post-tags {
+    margin: 0.5rem 0;
+  }
+
+  /* Paywall CTA shown when @member cannot access gated content. */
+  .paywall {
+    margin: 2rem 0;
+    padding: 1rem;
+    border: thin solid currentColor;
+    text-align: center;
+
+    & p {
+      margin: 0.5rem 0;
+    }
+  }
+
+  /* Prev/next post navigation under the article. */
+  .post-navigation {
+    margin-top: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  /* "Read next" related posts. */
+  .read-next {
+    margin-top: 3rem;
+  }
+
+  /* Pagination nav (partials/pagination.hbs). */
+  nav.pagination {
+    margin: 3rem 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  /* Site-wide footer. Contains the newsletter form, portal links, and a
+   * "Powered by Ghost" attribution.
+   */
+  .site-footer {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: thin solid currentColor;
+
+    & section {
+      margin-bottom: 1.5rem;
+    }
+
+    & nav ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    & nav li {
+      margin: 0;
+    }
+
+    /* Newsletter + search form controls. `background` + `color` are set
+     * explicitly (rather than inheriting) so the dark-mode `filter:
+     * invert` flips both together and the input stays readable.
+     */
+    & form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: baseline;
+
+      & label {
+        display: block;
+        width: 100%;
+      }
+    }
+
+    & input[type="email"] {
+      flex: 1 1 auto;
+      min-width: 200px;
+      padding: 0.4rem;
+      border: thin solid currentColor;
+      background: white;
+      color: black;
+      font: inherit;
+    }
+
+    & button {
+      padding: 0.4rem 0.8rem;
+      border: thin solid currentColor;
+      background: white;
+      color: black;
+      font: inherit;
+      cursor: pointer;
+    }
+  }
+
+  /* Search toggle outside the site footer context (same visual). */
+  button[data-ghost-search] {
+    padding: 0.4rem 0.8rem;
+    border: thin solid currentColor;
+    background: white;
+    color: black;
+    font: inherit;
+    cursor: pointer;
+  }
+}

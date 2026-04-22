@@ -1,0 +1,118 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  gscan:
+    name: GScan (theme validator)
+    runs-on: ubuntu-latest
+    # gscan is validated on Node, not bun: docs.ghost.org prescribes
+    # `npm install -g gscan`, and gscan v6.0.1 has an unsorted
+    # `readdirSync` in lib/checker.js that collides with bun's
+    # non-deterministic fs.readdir order (see oven-sh/bun#26570).
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: lts/*
+
+      - name: Install gscan globally
+        run: npm install -g gscan
+
+      - name: Validate theme with gscan
+        run: gscan theme/no-style-please-ghost
+
+  biome:
+    name: Biome format + lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - uses: oven-sh/setup-bun@v3
+        with:
+          bun-version: latest
+
+      - run: bun install --frozen-lockfile
+      - run: bun run check
+
+  css-build:
+    name: CSS build drift check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - uses: oven-sh/setup-bun@v3
+        with:
+          bun-version: latest
+
+      - run: bun install --frozen-lockfile
+      - name: Rebuild bundled CSS
+        run: bun run build:css
+      - name: Fail if built CSS drifts from source
+        run: |
+          if ! git diff --exit-code theme/no-style-please-ghost/assets/css/style.css; then
+            echo "::error::theme/no-style-please-ghost/assets/css/style.css is out of sync with src/css/. Run 'task build' (or 'bun run build:css') and commit." >&2
+            exit 1
+          fi
+
+  compose-smoke:
+    name: Compose up smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Prepare environment
+        run: cp .env.example .env
+
+      - name: Build / pull images and wait for healthy services
+        run: docker compose up -d --wait
+
+      - name: Hit Ghost root
+        run: |
+          for i in $(seq 1 30); do
+            if curl --fail --silent --show-error --output /dev/null http://localhost:2368/; then
+              echo "Ghost responded on try $i"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Ghost did not respond in time" >&2
+          exit 1
+
+      - name: Dump ghost logs on failure
+        if: failure()
+        run: docker compose logs ghost
+
+      - name: Tear down
+        if: always()
+        run: docker compose down -v
+
+  actionlint:
+    name: Actions lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - uses: raven-actions/actionlint@v2.1.2

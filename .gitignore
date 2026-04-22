@@ -1,0 +1,21 @@
+# Environment
+.env
+.env.local
+
+# Compose-managed data (anything bind-mounted outside named volumes)
+data/
+
+# Node
+node_modules/
+
+# Theme distribution artifacts (`task zip` output)
+dist/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db

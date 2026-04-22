@@ -1,0 +1,21 @@
+{{!-- Inline subscribe form. `data-members-form` + `data-members-email`
+  are the Ghost Portal hooks: the browser submits the email to Portal and
+  Ghost sends the confirmation mail. The <p data-members-success> /
+  <p data-members-error> placeholders are updated by Portal in place
+  after submission. `email_field_id` avoids duplicate `id` attributes
+  when the form is embedded more than once (e.g. footer + post CTA). --}}
+<form data-members-form="signup">
+  <label for="{{email_field_id}}">{{t "Subscribe to {sitetitle}" sitetitle=@site.title}}</label>
+  <input
+    id="{{email_field_id}}"
+    name="email"
+    type="email"
+    required
+    data-members-email
+    placeholder="{{t "Your email address"}}"
+    aria-label="{{t "Your email address"}}"
+  />
+  <button type="submit">{{t "Subscribe"}}</button>
+  <p data-members-success hidden>{{t "Email sent"}}</p>
+  <p data-members-error hidden></p>
+</form>

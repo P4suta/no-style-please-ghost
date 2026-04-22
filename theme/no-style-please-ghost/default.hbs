@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="{{@site.locale}}">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{meta_title}}</title>
+    <link rel="stylesheet" type="text/css" href="{{asset "css/style.css"}}" />
+    <link rel="alternate" type="application/rss+xml" title="{{@site.title}}" href="{{@site.url}}/rss/" />
+    {{ghost_head}}
+  </head>
+  <body
+    a="auto"
+    class="{{body_class}}{{#match @custom.body_font "M PLUS 1 Code"}} body-font-mplus1code{{/match}}{{#match @custom.body_font "Noto Sans JP"}} body-font-noto-sans-jp{{/match}}{{#match @custom.body_font "Noto Serif JP"}} body-font-noto-serif-jp{{/match}}{{#match @custom.body_font "System sans-serif"}} body-font-system-sans{{/match}}{{#match @custom.body_font "System serif"}} body-font-system-serif{{/match}}{{#match @custom.heading_font "M PLUS 1 Code"}} heading-font-mplus1code{{/match}}{{#match @custom.heading_font "Noto Sans JP"}} heading-font-noto-sans-jp{{/match}}{{#match @custom.heading_font "Noto Serif JP"}} heading-font-noto-serif-jp{{/match}}{{#match @custom.heading_font "System sans-serif"}} heading-font-system-sans{{/match}}{{#match @custom.heading_font "System serif"}} heading-font-system-serif{{/match}}"
+  >
+    <main class="page-content" aria-label="Content">
+      <div class="w">
+        {{{body}}}
+        {{> "components/footer"}}
+      </div>
+    </main>
+    {{ghost_foot}}
+  </body>
+</html>

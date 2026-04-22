@@ -1,0 +1,99 @@
+/* Self-hosted variable fonts. Browsers only fetch one if a rendered
+ * glyph actually references its family, so non-default presets don't
+ * incur the download unless the admin opts in via the theme's
+ * body_font / heading_font custom selects.
+ */
+
+@layer base {
+  @font-face {
+    font-family: "M PLUS 1 Code";
+    src: url("../../assets/fonts/MPLUS1Code.woff2") format("woff2");
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "Noto Sans JP";
+    src: url("../../assets/fonts/NotoSansJP.woff2") format("woff2");
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "Noto Serif JP";
+    src: url("../../assets/fonts/NotoSerifJP.woff2") format("woff2");
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  /* Body font: picked from the theme's `body_font` custom select and
+   * mapped to a class in default.hbs. `var(--gh-font-body, …)` lets
+   * Ghost's Brand Typography panel win whenever an admin has chosen
+   * something there — the theme select only fills the fallback slot.
+   */
+  body {
+    font-family: var(--gh-font-body, monospace);
+
+    &.body-font-mplus1code {
+      font-family: var(--gh-font-body, "M PLUS 1 Code", monospace);
+    }
+
+    &.body-font-noto-sans-jp {
+      font-family:
+        var(--gh-font-body), "Noto Sans JP", system-ui, -apple-system, "Hiragino Sans",
+        "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+    }
+
+    &.body-font-noto-serif-jp {
+      font-family:
+        var(--gh-font-body), "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", "YuMincho",
+        "MS Mincho", serif;
+    }
+
+    &.body-font-system-sans {
+      font-family:
+        var(--gh-font-body), system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
+        sans-serif;
+    }
+
+    &.body-font-system-serif {
+      font-family: var(--gh-font-body), ui-serif, Georgia, "Times New Roman", serif;
+    }
+  }
+
+  /* Heading font: symmetric with body. `inherit` keeps the original
+   * no-style-please look (headings match body) when nothing is picked.
+   */
+  :is(h1, h2, h3, h4, h5, h6) {
+    font-family: var(--gh-font-heading, inherit);
+  }
+
+  body.heading-font-mplus1code :is(h1, h2, h3, h4, h5, h6) {
+    font-family: var(--gh-font-heading, "M PLUS 1 Code", monospace);
+  }
+
+  body.heading-font-noto-sans-jp :is(h1, h2, h3, h4, h5, h6) {
+    font-family:
+      var(--gh-font-heading), "Noto Sans JP", system-ui, -apple-system, "Hiragino Sans",
+      "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+  }
+
+  body.heading-font-noto-serif-jp :is(h1, h2, h3, h4, h5, h6) {
+    font-family:
+      var(--gh-font-heading), "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", "YuMincho",
+      "MS Mincho", serif;
+  }
+
+  body.heading-font-system-sans :is(h1, h2, h3, h4, h5, h6) {
+    font-family:
+      var(--gh-font-heading), system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
+      sans-serif;
+  }
+
+  body.heading-font-system-serif :is(h1, h2, h3, h4, h5, h6) {
+    font-family: var(--gh-font-heading), ui-serif, Georgia, "Times New Roman", serif;
+  }
+}

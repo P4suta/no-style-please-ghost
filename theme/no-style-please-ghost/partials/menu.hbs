@@ -1,0 +1,6 @@
+{{!-- Wraps Ghost's {{navigation}} helper in a semantic <nav> with an
+  i18n'd aria-label. The helper auto-discovers `partials/navigation.hbs`
+  to render each link as a bare <li><a>, keeping the list markup minimal. --}}
+<nav aria-label="{{t "Menu"}}">
+  {{navigation}}
+</nav>

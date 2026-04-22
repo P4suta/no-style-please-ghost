@@ -1,0 +1,10 @@
+# Development overrides. `docker compose` merges this on top of compose.yaml
+# automatically — no flag required. CI overrides it to {} so builds run
+# against the production-shaped stack.
+
+services:
+  ghost:
+    environment:
+      NODE_ENV: development
+    volumes:
+      - ./theme/no-style-please-ghost:/var/lib/ghost/content/themes/no-style-please-ghost:rw
