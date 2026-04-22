@@ -1,7 +1,7 @@
 # no-style-please-ghost
 
-[![CI](https://github.com/P4suta/no-style-please-ghost/actions/workflows/ci.yml/badge.svg)](https://github.com/P4suta/no-style-please-ghost/actions/workflows/ci.yml)
-[![Actions security](https://github.com/P4suta/no-style-please-ghost/actions/workflows/zizmor.yml/badge.svg)](https://github.com/P4suta/no-style-please-ghost/actions/workflows/zizmor.yml)
+[![CI](https://github.com/P4suta/no-style-please-ghost/actions/workflows/ci.yml/badge.svg?branch=main&event=push)](https://github.com/P4suta/no-style-please-ghost/actions/workflows/ci.yml?query=branch%3Amain+event%3Apush)
+[![Actions security](https://github.com/P4suta/no-style-please-ghost/actions/workflows/zizmor.yml/badge.svg?branch=main&event=push)](https://github.com/P4suta/no-style-please-ghost/actions/workflows/zizmor.yml?query=branch%3Amain+event%3Apush)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 A Ghost port of [riggraz/no-style-please](https://github.com/riggraz/no-style-please) — a
