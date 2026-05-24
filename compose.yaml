@@ -34,7 +34,7 @@ services:
     restart: unless-stopped
 
   mysql:
-    image: mysql:8
+    image: mysql:9
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
