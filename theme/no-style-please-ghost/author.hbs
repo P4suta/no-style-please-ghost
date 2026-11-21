@@ -1,64 +1,26 @@
 {{!< default}}
 
-{{> back-link}}
-
-{{#author}}
-  <h1>{{name}}</h1>
-
-  {{#if cover_image}}
-    {{> "components/feature-image"
-      image=cover_image
-      fallback_alt=name}}
-  {{/if}}
-
-  {{#if bio}}
-    <p>{{bio}}</p>
-  {{/if}}
-
-  {{#if location}}
-    <p>{{location}}</p>
-  {{/if}}
-
-  {{#if website}}
-    <p><a href="{{website}}" rel="me noopener">{{website}}</a></p>
-  {{/if}}
-
-  {{!-- Social links. social_url normalises the admin-stored handle into
-    a canonical profile URL. Plain text labels keep the no-style-please
-    aesthetic — no SVG icons, no brand colors. --}}
-  {{#if twitter}}
-    <p><a href="{{social_url type="twitter"}}" rel="me noopener" target="_blank">Twitter</a></p>
-  {{/if}}
-  {{#if facebook}}
-    <p><a href="{{social_url type="facebook"}}" rel="me noopener" target="_blank">Facebook</a></p>
-  {{/if}}
-  {{#if linkedin}}
-    <p><a href="{{social_url type="linkedin"}}" rel="me noopener" target="_blank">LinkedIn</a></p>
-  {{/if}}
-  {{#if bluesky}}
-    <p><a href="{{social_url type="bluesky"}}" rel="me noopener" target="_blank">Bluesky</a></p>
-  {{/if}}
-  {{#if threads}}
-    <p><a href="{{social_url type="threads"}}" rel="me noopener" target="_blank">Threads</a></p>
-  {{/if}}
-  {{#if mastodon}}
-    <p><a href="{{social_url type="mastodon"}}" rel="me noopener" target="_blank">Mastodon</a></p>
-  {{/if}}
-  {{#if tiktok}}
-    <p><a href="{{social_url type="tiktok"}}" rel="me noopener" target="_blank">TikTok</a></p>
-  {{/if}}
-  {{#if youtube}}
-    <p><a href="{{social_url type="youtube"}}" rel="me noopener" target="_blank">YouTube</a></p>
-  {{/if}}
-  {{#if instagram}}
-    <p><a href="{{social_url type="instagram"}}" rel="me noopener" target="_blank">Instagram</a></p>
-  {{/if}}
-
-  {{#if count.posts}}
-    <p class="author-meta">{{count.posts}}</p>
-  {{/if}}
-{{/author}}
-
-{{> post-list}}
-
-{{pagination}}
+<div class="frame archive">
+    {{#author}}
+        <header class="archive-heading">
+            {{#if profile_image}}<img class="portrait" src="{{img_url profile_image size="xs"}}" alt="" width="80" height="80">{{/if}}
+            <h1>{{name}}</h1>
+            {{#if bio}}<p>{{bio}}</p>{{/if}}
+            {{#if location}}<p>{{location}}</p>{{/if}}
+            <div class="author-links">
+                {{#if website}}<a class="action" href="{{website}}" rel="me"><span aria-hidden="true">↗</span><span>{{website}}</span></a>{{/if}}
+                {{#if twitter}}<a class="action" href="{{social_url type="twitter"}}" rel="me"><span aria-hidden="true">↗</span><span>X</span></a>{{/if}}
+                {{#if facebook}}<a class="action" href="{{social_url type="facebook"}}" rel="me"><span aria-hidden="true">↗</span><span>Facebook</span></a>{{/if}}
+                {{#if linkedin}}<a class="action" href="{{social_url type="linkedin"}}" rel="me"><span aria-hidden="true">↗</span><span>LinkedIn</span></a>{{/if}}
+                {{#if bluesky}}<a class="action" href="{{social_url type="bluesky"}}" rel="me"><span aria-hidden="true">↗</span><span>Bluesky</span></a>{{/if}}
+                {{#if threads}}<a class="action" href="{{social_url type="threads"}}" rel="me"><span aria-hidden="true">↗</span><span>Threads</span></a>{{/if}}
+                {{#if mastodon}}<a class="action" href="{{social_url type="mastodon"}}" rel="me"><span aria-hidden="true">↗</span><span>Mastodon</span></a>{{/if}}
+                {{#if tiktok}}<a class="action" href="{{social_url type="tiktok"}}" rel="me"><span aria-hidden="true">↗</span><span>TikTok</span></a>{{/if}}
+                {{#if youtube}}<a class="action" href="{{social_url type="youtube"}}" rel="me"><span aria-hidden="true">↗</span><span>YouTube</span></a>{{/if}}
+                {{#if instagram}}<a class="action" href="{{social_url type="instagram"}}" rel="me"><span aria-hidden="true">↗</span><span>Instagram</span></a>{{/if}}
+            </div>
+        </header>
+    {{/author}}
+    {{> post-list items=posts}}
+    {{pagination}}
+</div>

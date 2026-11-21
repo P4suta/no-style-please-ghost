@@ -1,19 +1,18 @@
-{{#if posts}}
-  <ul>
-    {{#foreach posts}}
-      <li>
-        <span>
-          <time datetime="{{date published_at format="YYYY-MM-DD"}}">{{date published_at format="YYYY-MM-DD"}}</time>
-        </span>
-        <a href="{{url}}">{{title}}</a>
-        {{!-- Flag gated posts with a plain text sigil so the list stays
-          uniform — matches Source's "[Members only]" pattern without
-          adding a lock icon. `{{^has visibility="public"}}` is truthy
-          for any non-public visibility (members, paid, or tier-gated). --}}
-        {{^has visibility="public"}}
-          <span class="members-only">[{{t "Members only"}}]</span>
-        {{/has}}
-      </li>
-    {{/foreach}}
-  </ul>
+{{#if items}}
+    <ol class="post-list" role="list">
+        {{#foreach items}}
+            <li>
+                <time datetime="{{date published_at format="YYYY-MM-DD"}}">{{date published_at}}</time>
+                <a class="post-link" href="{{url}}">
+                    <span class="row-title">{{title}}</span>
+                    {{#has visibility="paid"}}<small>{{t "Paid members only"}}</small>
+                    {{else has visibility="tiers"}}<small>{{t "Paid members only"}}{{tiers prefix=" · " suffix="" lastSeparator=", "}}</small>
+                    {{else has visibility="members"}}<small>{{t "Members only"}}</small>{{/has}}
+                    <span class="direction" aria-hidden="true">→</span>
+                </a>
+            </li>
+        {{/foreach}}
+    </ol>
+{{else}}
+    <p class="empty">{{t "No posts yet."}}</p>
 {{/if}}

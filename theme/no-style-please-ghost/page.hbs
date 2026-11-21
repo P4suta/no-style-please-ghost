@@ -1,21 +1,11 @@
 {{!< default}}
 
 {{#post}}
-  {{> back-link}}
-
-  <article class="{{post_class}}">
-    {{#match @page.show_title_and_feature_image}}
-      <h1>{{title}}</h1>
-
-      {{#if feature_image}}
-        {{> "components/feature-image"
-          image=feature_image
-          alt=feature_image_alt
-          fallback_alt=title
-          caption=feature_image_caption}}
-      {{/if}}
-    {{/match}}
-
-    {{content}}
-  </article>
+    <article class="reading {{post_class}}">
+        {{#match @page.show_title_and_feature_image}}
+            <header class="article-heading measure"><h1>{{title}}</h1></header>
+            {{#if feature_image}}{{> "components/feature-image" image=feature_image alt=feature_image_alt caption=feature_image_caption}}{{/if}}
+        {{/match}}
+        {{> reading-content}}
+    </article>
 {{/post}}

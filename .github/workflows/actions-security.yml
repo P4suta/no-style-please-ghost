@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      security-events: write
+      security-events: write # Upload the scan results to GitHub code scanning.
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -28,19 +28,10 @@ jobs:
       - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
 
       - name: Seed empty SARIF
-        # Ensures a valid SARIF always exists for the upload step, even
-        # if zizmor aborts before producing its own output (e.g. invalid
-        # config). zizmor findings themselves still fail the job — this
-        # step is just a safety net against empty uploads, not a way to
-        # suppress scan results.
         run: |
           printf '%s\n' '{"version":"2.1.0","runs":[]}' > zizmor.sarif
 
       - name: zizmor
-        # No `continue-on-error` — findings must fail the job so that
-        # they are addressed, not silently uploaded. Fix the workflow
-        # (or, if truly unavoidable, document an explicit zizmor config
-        # exemption with justification in the repo).
         run: uvx zizmor --format sarif . > zizmor.sarif
 
       - name: Upload SARIF

@@ -7,6 +7,8 @@ data/
 
 # Node
 node_modules/
+.docker-modules/
+test-results/
 
 # Theme distribution artifacts (`task zip` output)
 dist/

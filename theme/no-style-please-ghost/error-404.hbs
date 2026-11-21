@@ -1,7 +1,7 @@
 {{!< default}}
 
-{{> back-link}}
-
-<h1>404 &middot; {{t "Page not found"}}</h1>
-
-<p><a href="{{@site.url}}/">{{t "Go to the front page"}}</a></p>
+<div class="measure error-page">
+    <p class="status-code">404</p>
+    <h1>{{t "Page not found"}}</h1>
+    {{> back-link}}
+</div>

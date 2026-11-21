@@ -1,66 +1,35 @@
-# no-style-please-ghost
+# The `no-style-please-ghost` theme
 
-[![CI](https://github.com/P4suta/no-style-please-ghost/actions/workflows/ci.yml/badge.svg?branch=main&event=push)](https://github.com/P4suta/no-style-please-ghost/actions/workflows/ci.yml?query=branch%3Amain+event%3Apush)
-[![Actions security](https://github.com/P4suta/no-style-please-ghost/actions/workflows/zizmor.yml/badge.svg?branch=main&event=push)](https://github.com/P4suta/no-style-please-ghost/actions/workflows/zizmor.yml?query=branch%3Amain+event%3Apush)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+A monochrome reading theme for Ghost 6, inspired by Riccardo Graziosi’s [no-style-please](https://github.com/riggraz/no-style-please).
+The home page pairs publication dates with article titles.
+Each article links to its authors and tags, and the archive works without JavaScript.
 
-A Ghost port of [riggraz/no-style-please](https://github.com/riggraz/no-style-please) — a
-(nearly) no-CSS, fast, minimalist theme.
+## Install the theme
 
-The repository ships a self-contained Docker Compose environment so the theme
-can be developed without installing Ghost or Node on the host.
-
-## Quick start
-
-There are two modes. Pick whichever matches what you're doing.
-
-### Try the theme like an end user (distribution mode, default)
+With Docker and Task installed, run the following commands from the repository root.
 
 ```sh
-cp .env.example .env
-task up           # vanilla Ghost + MySQL, no theme pre-installed
-task install      # one-time: bun + biome + lightningcss
-task zip          # dist/no-style-please-ghost-<version>.zip
-```
-
-Open <http://localhost:2368/ghost/>, finish the owner setup, then
-_Settings → Design & branding → Change theme → Upload theme_ → drop
-the zip → activate. This is the same flow a real site admin follows.
-
-### Live theme editing (development mode)
-
-```sh
-cp .env.example .env
-task dev          # same stack, with the theme bind-mounted
 task install
-task watch        # auto-rebuild src/css/ on change
+task zip
 ```
 
-Complete the owner setup, then activate **no-style-please-ghost**
-under _Installed_ (it's already mounted on disk).
+Upload the ZIP from `dist/` under **Settings → Design & branding → Change theme**, then activate **no-style-please-ghost**.
+The [setup guide](docs/setup.md) covers local preview and live editing.
 
-### After activation (either mode)
+## Customize the publication
 
-_Design & branding → Customize → Site-wide_ exposes two independent
-selects — **Heading font** and **Body font** — with six choices each
-(Monospace / M PLUS 1 Code / Noto Sans JP / Noto Serif JP / System
-sans-serif / System serif).
+Choose heading and body fonts independently in the theme settings.
+The default uses a system serif, and the optional Japanese fonts ship with the theme.
+Enable **Show featured posts** to place up to three public selections before the dated index.
+Readers’ system preferences control the light and dark appearance.
 
-## Repository layout
+## Develop and test
 
-| Path                           | Purpose                                   |
-| ------------------------------ | ----------------------------------------- |
-| `compose.yaml`                 | Ghost + MySQL service definition          |
-| `compose.override.yaml`        | Dev-only overrides (auto-merged)          |
-| `theme/no-style-please-ghost/` | The Ghost theme source (bind-mounted)     |
-| `docs/`                        | Setup, mapping, and licensing notes       |
-| `Taskfile.yml`                 | Common commands (`task up`, `task build`, `task check`, `task gscan`) |
-
-## Acknowledgements
-
-See [`NOTICE`](NOTICE) and [`docs/licensing.md`](docs/licensing.md). The theme is
-a derivative work of the MIT-licensed original by Riccardo Graziosi (2020).
+The [development instructions](docs/setup.md#run-the-tests) explain how to reproduce a reading problem with the current theme and verify a change.
+The suite uploads the distribution to a disposable Ghost site and follows the same URLs readers use.
+The [template guide](docs/theme-mapping.md) describes the entry points for archives, content, and navigation.
 
 ## License
 
-MIT — see [`LICENSE`](LICENSE).
+See the [theme license](LICENSE) for redistribution terms.
+The [licensing notes](docs/licensing.md) identify the upstream work and the licenses for the bundled fonts.

@@ -1,8 +1,7 @@
 {{!< default}}
 
-{{!-- Fallback listing used whenever no more-specific template matches
-  (e.g. non-home collection routes). `home.hbs` handles the front page
-  and carries the site title / featured block; this file stays minimal. --}}
-{{> post-list}}
-
-{{pagination}}
+<div class="frame archive">
+    <header class="archive-heading"><h1>{{t "Latest posts"}}</h1></header>
+    {{> post-list items=posts}}
+    {{pagination}}
+</div>

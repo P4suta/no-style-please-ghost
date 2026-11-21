@@ -1,103 +1,127 @@
-/* Element defaults: the "almost no CSS" core of the theme. Everything
- * that touches raw HTML elements (code, table, blockquote, heading
- * rhythm, horizontal rules) lives here. Component-level styling goes
- * in components.css.
- */
+:root {
+  color-scheme: light dark;
+  --paper: #fff;
+  --ink: #000;
+  --measure: 40rem;
+  --frame: 58rem;
+  --gutter: clamp(1rem, 4vw, 3rem);
+}
 
-@layer base {
-  html,
-  body {
-    background: white;
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #000;
+    --ink: #fff;
   }
+}
 
-  html {
-    height: 100%;
-    scroll-behavior: smooth;
-  }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  background: var(--paper);
+  color: var(--ink);
+}
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--gh-font-body, var(--body, var(--serif)));
+  font-size: 1.125rem;
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+}
 
-  body {
-    color: black;
-    font-size: 16px;
-    line-height: 1.4;
-    margin: 0;
-    min-height: 100%;
-    overflow-wrap: break-word;
-  }
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  font-family: var(--gh-font-heading, var(--heading, var(--serif)));
+  line-height: 1.15;
+  text-wrap: balance;
+}
 
-  :is(h2, h3, h4, h5, h6) {
-    margin-top: 3rem;
-  }
-
-  hr {
-    margin: 2rem 0;
-    text-align: center;
-    border: 0;
-
-    &::before {
-      content: "/////";
-    }
-
-    &::after {
-      content: attr(data-content) "/////";
-    }
-  }
-
-  p {
-    margin: 1rem 0;
-  }
-
-  li {
-    margin: 0.4rem 0;
-  }
-
-  /* Anchor target highlight, kept from upstream. */
-  *:target {
-    background: yellow;
-  }
-
-  table {
-    width: 100%;
-
-    & th,
-    & td {
-      border: thin solid black;
-      border-collapse: collapse;
-      padding: 0.4rem;
-    }
-  }
-
-  table {
-    border: thin solid black;
-    border-collapse: collapse;
-    padding: 0.4rem;
-  }
-
-  code {
-    color: white;
-    background: black;
-  }
-
-  pre code,
-  div.highlighter-rouge code {
-    display: block;
-    overflow-x: auto;
-    white-space: pre-wrap;
-    padding: 1rem;
-  }
-
-  blockquote {
-    font-style: italic;
-    border: thin solid black;
-    padding: 1rem;
-
-    & p {
-      margin: 0;
-    }
-  }
-
-  img {
-    max-width: 100%;
-    display: block;
-    margin: 0 auto;
-  }
+h1 {
+  font-size: clamp(2.5rem, 6vw, 4.75rem);
+  letter-spacing: -0.045em;
+}
+h2 {
+  font-size: clamp(1.6rem, 3.5vw, 2.125rem);
+  letter-spacing: -0.025em;
+}
+p,
+figure {
+  margin: 0;
+}
+a {
+  color: inherit;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+a:hover {
+  text-decoration-thickness: 2px;
+}
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+main:focus {
+  outline: none;
+}
+img,
+video,
+iframe {
+  max-inline-size: 100%;
+}
+img,
+video {
+  block-size: auto;
+}
+img {
+  display: block;
+}
+figcaption {
+  margin-block-start: 0.6rem;
+  font: 0.95rem / 1.6 var(--sans);
+}
+pre,
+code,
+kbd {
+  font-family: var(--mono);
+}
+pre {
+  max-inline-size: 100%;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: 1rem;
+  border: 1px solid;
+  font-size: 0.95em;
+}
+blockquote {
+  margin-inline: 0;
+  padding-inline-start: 1.25em;
+  border-inline-start: 3px solid;
+}
+hr {
+  inline-size: 100%;
+  border: 0;
+  border-block-start: 1px solid;
+}
+table {
+  border-collapse: collapse;
+}
+td,
+th {
+  padding: 0.45em 0.75em;
+  border-block-end: 1px solid;
+  text-align: start;
 }
