@@ -85,6 +85,8 @@ jobs:
           bun-version-file: package.json
       - run: bun install --frozen-lockfile
       - run: bun run typecheck
+      - name: Check packaging and release mutations
+        run: bun run test:mutations --unit
       - run: bun x playwright install --with-deps --only-shell chromium firefox webkit
       - run: bun run test
 

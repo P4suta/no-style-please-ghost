@@ -33,7 +33,7 @@ Host commands use their own installation in `node_modules/`.
 ## Run the tests
 
 Use the Node.js version in `.nvmrc` and the Bun version in `package.json`.
-The reader tests require Docker and the Chromium, Firefox, and WebKit builds supplied by Playwright.
+The tests require jq, Docker, and the Chromium, Firefox, and WebKit builds supplied by Playwright.
 
 ```sh
 bun install --frozen-lockfile
@@ -55,6 +55,30 @@ The suite uploads the ZIP, signs in test readers, and exercises search and membe
 The accessibility tests run axe on nine page views in light and dark mode.
 The keyboard tests exercise focus, search results, and wide tables.
 Set `GHOST_TEST_PORT` to choose a loopback port other than 2468.
+
+## Run mutation tests
+
+Run `bun run test:mutations --list` to see the configured faults and `bun run test:mutations` to exercise them.
+The runner changes one file at a time in a temporary copy, runs the named test before and after the change, and checks its assertion result.
+The `--unit` option selects packaging and release checks, and `--browser` exercises the installed theme in Chromium.
+Set `GHOST_MUTATION_PORT` to choose a loopback port other than 2496.
+
+## Publish a release
+
+Release-please opens a version proposal from Conventional Commits on `main`.
+Merging the proposal creates a version tag and a draft, then starts **Publish the verified theme ZIP** on that tag.
+The build installs the ZIP in Ghost, runs the mutation tests, checks GScan, and creates a CycloneDX inventory of the bundled fonts.
+The publication job verifies the build attestation and fills in missing draft assets after checking their digests.
+Before approving the `release-publish` environment, confirm that the version tag, source commit, and build match the intended release.
+Check that the repository enforces Immutable Releases.
+
+If publication stops after uploading some files, rerun the failed job in the original build to keep its attestation bundle.
+If the build dispatch fails before a build starts, select the version tag in **Publish the verified theme ZIP** and supply the numeric draft release ID.
+The workflow refuses a conflicting draft or an already published release.
+
+For a new installation of the automation, run **Verify release App access** on `main`.
+Give the repository variable `RELEASE_PROPOSALS_ENABLED` the value `true` and run **Release proposal**.
+The `release-please` environment holds the read-only Doppler service token for the repository’s `automation` config.
 
 ## Measure page loading
 

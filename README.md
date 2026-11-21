@@ -6,14 +6,8 @@ Each article links to its authors and tags, and the archive works without JavaSc
 
 ## Install the theme
 
-With Docker and Task installed, run the following commands from the repository root.
-
-```sh
-task install
-task zip
-```
-
-Upload the ZIP from `dist/` under **Settings → Design & branding → Change theme**, then activate **no-style-please-ghost**.
+Download the versioned `no-style-please-ghost-*.zip` asset from [GitHub Releases](https://github.com/P4suta/no-style-please-ghost/releases/latest).
+Under **Settings → Design & branding → Change theme**, upload the ZIP and activate **no-style-please-ghost**.
 The [setup guide](docs/setup.md) covers local preview and live editing.
 
 ## Customize the publication

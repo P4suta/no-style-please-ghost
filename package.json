@@ -15,6 +15,7 @@
     "zip": "bun run build:css && bun scripts/package-theme.ts",
     "typecheck": "tsc --noEmit",
     "test:unit": "bun test tests/*.test.ts",
+    "test:mutations": "bun scripts/mutations.ts",
     "test:readers": "bun run zip && playwright test",
     "test": "bun run test:unit && bun run test:readers",
     "gscan": "node node_modules/gscan/bin/cli.js theme/no-style-please-ghost",
@@ -30,10 +31,12 @@
     "@tryghost/portal": "2.72.38",
     "@tryghost/sodo-search": "1.9.7",
     "@types/node": "24.19.2",
+    "fast-xml-parser": "5.12.1",
     "fflate": "0.8.3",
     "gscan": "6.7.0",
     "handlebars": "4.7.10",
     "lightningcss-cli": "1.33.0",
-    "typescript": "6.0.3"
+    "typescript": "6.0.3",
+    "yaml": "2.9.1"
   }
 }

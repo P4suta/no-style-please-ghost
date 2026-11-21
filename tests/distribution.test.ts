@@ -8,6 +8,7 @@ import {
   readFileSync,
   renameSync,
   rmSync,
+  writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { basename, join, resolve } from "node:path";
@@ -31,6 +32,7 @@ test("the upload command builds a repeatable ZIP containing the runtime theme an
     "post.hbs",
     "partials/navigation.hbs",
     "locales/ja.json",
+    "robots.txt",
     "assets/css/style.css",
     "assets/fonts/MPLUS1Code.latin.woff2",
     "assets/fonts/NotoSansJP.latin.woff2",
@@ -44,10 +46,30 @@ test("the upload command builds a repeatable ZIP containing the runtime theme an
     if (path.endsWith(".woff2")) assert.ok(files[path.replace(/(?:\.latin)?\.woff2$/, "-OFL.txt")]);
   }
   assert.equal(JSON.parse(new TextDecoder().decode(files["package.json"])).name, theme);
+  assert.deepEqual(Buffer.from(files["robots.txt"]), readFileSync(`theme/${theme}/robots.txt`));
   assert.deepEqual(
     Buffer.from(files["assets/css/style.css"]),
     readFileSync(`theme/${theme}/assets/css/style.css`),
   );
+});
+
+test("an empty theme file stops packaging and preserves the previous ZIP", (t) => {
+  const root = mkdtempSync(join(tmpdir(), "ghost-empty-file-"));
+  t.after(() => rmSync(root, { recursive: true, force: true }));
+  const source = join(root, "theme", theme);
+  const output = join(root, "dist");
+  cpSync(`theme/${theme}`, source, { recursive: true });
+  const build = () =>
+    execFileSync("bun", [resolve("scripts/package-theme.ts"), output], {
+      cwd: root,
+      stdio: "pipe",
+    });
+  build();
+  const path = join(output, basename(archive));
+  const previous = readFileSync(path);
+  writeFileSync(join(source, "post.hbs"), "");
+  assert.throws(build, /Empty theme file: post\.hbs/);
+  assert.deepEqual(readFileSync(path), previous);
 });
 
 for (const missing of [

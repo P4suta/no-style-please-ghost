@@ -1,0 +1,161 @@
+name: Publish the verified theme ZIP
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_id:
+        description: Numeric ID of the release-please draft for the selected version tag
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-theme-${{ inputs.release_id }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Verify the tagged Ghost theme
+    if: github.ref_type == 'tag' && github.ref_protected
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    permissions:
+      contents: read
+    outputs:
+      tag: ${{ steps.candidate.outputs.tag }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Match the version tag to the reviewed source
+        id: candidate
+        env:
+          RELEASE_ID: ${{ inputs.release_id }}
+        shell: bash
+        run: |
+          [[ "$RELEASE_ID" =~ ^[1-9][0-9]*$ ]]
+          tag=$GITHUB_REF_NAME
+          [[ "$tag" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          git merge-base --is-ancestor "$GITHUB_SHA" origin/main
+          test "v$(jq -r '.["."]' .release-please-manifest.json)" = "$tag"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version-file: .nvmrc
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version-file: package.json
+      - name: Install the locked test tools
+        run: |
+          bun install --frozen-lockfile
+          bun x playwright install --with-deps --only-shell chromium firefox webkit
+      - name: Exercise the installed ZIP and check the mutation suite
+        run: |
+          bun run verify
+          bun run test:mutations
+      - name: Validate the upload file and inventory its contents
+        env:
+          TAG: ${{ steps.candidate.outputs.tag }}
+        run: |
+          node node_modules/gscan/bin/cli.js -z "dist/no-style-please-ghost-${TAG#v}.zip"
+          bun scripts/release-archive.ts "$TAG" dist
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: theme-build
+          path: dist/
+          if-no-files-found: error
+
+  attest:
+    name: Attest the tested ZIP and inventory
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      id-token: write # Request the build identity.
+      attestations: write # Record provenance for the downloaded files.
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: theme-build
+          path: dist
+      - name: Verify downloaded build bytes
+        working-directory: dist
+        run: sha256sum --check --strict SHA256SUMS
+      - name: Attest the checked digests
+        id: provenance
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
+        with:
+          subject-checksums: dist/SHA256SUMS
+          create-storage-record: false
+      - name: Preserve the original bundle
+        env:
+          BUNDLE: ${{ steps.provenance.outputs.bundle-path }}
+        run: cp "$BUNDLE" provenance.jsonl
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: theme-provenance
+          path: provenance.jsonl
+          if-no-files-found: error
+
+  publish:
+    name: Publish the complete verified draft
+    needs: [build, attest]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: release-publish
+    permissions:
+      contents: write # Attach verified assets and publish the existing draft.
+      attestations: read # Verify the original build attestation.
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+          sparse-checkout: |
+            scripts/release-draft.jq
+            scripts/release-assets.jq
+          sparse-checkout-cone-mode: false
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: theme-build
+          path: dist
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: theme-provenance
+          path: dist
+      - name: Check provenance, complete the draft, and publish
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_ID: ${{ inputs.release_id }}
+          TAG: ${{ needs.build.outputs.tag }}
+        run: |
+          [[ "$RELEASE_ID" =~ ^[1-9][0-9]*$ ]]
+          endpoint="repos/$GITHUB_REPOSITORY/releases/$RELEASE_ID"
+          check_draft() {
+            gh api "$endpoint" > "$RUNNER_TEMP/draft.json"
+            test "$(jq -r --arg source "$GITHUB_SHA" --arg id "$RELEASE_ID" -f scripts/release-draft.jq "$RUNNER_TEMP/draft.json")" = "$TAG"
+          }
+          check_draft
+          test "$(gh api "repos/$GITHUB_REPOSITORY/commits/$TAG" --jq .sha)" = "$GITHUB_SHA"
+          zip="no-style-please-ghost-${TAG#v}.zip"
+          (cd dist && sha256sum --check --strict SHA256SUMS)
+          for subject in "$zip" theme.cdx.json; do
+            gh attestation verify "dist/$subject" --repo "$GITHUB_REPOSITORY" \
+              --bundle dist/provenance.jsonl --source-digest "$GITHUB_SHA" --source-ref "$GITHUB_REF" \
+              --signer-workflow "$GITHUB_REPOSITORY/.github/workflows/publish-theme.yml" --deny-self-hosted-runners
+          done
+          expected=$(cd dist && sha256sum -- "$zip" theme.cdx.json SHA256SUMS provenance.jsonl |
+            jq -Rn '[inputs | capture("^(?<hash>[0-9a-f]{64})  (?<name>.+)$") | {name, digest: ("sha256:" + .hash)}]')
+          missing=$(jq -r --argjson expected "$expected" -f scripts/release-assets.jq "$RUNNER_TEMP/draft.json")
+          while IFS= read -r name; do
+            if [[ -n "$name" ]]; then gh release upload "$TAG" "dist/$name" --repo "$GITHUB_REPOSITORY"; fi
+          done <<< "$missing"
+          check_draft
+          missing=$(jq -r --argjson expected "$expected" -f scripts/release-assets.jq "$RUNNER_TEMP/draft.json")
+          test -z "$missing"
+          gh api --method PATCH "$endpoint" -F draft=false | jq -e 'select(.draft == false and .immutable == true) | .html_url'
