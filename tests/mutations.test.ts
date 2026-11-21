@@ -1,6 +1,16 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { classifyMutation, replaceOnce } from "../scripts/mutations";
+import config from "../playwright.config";
+import { browserMutationTimeoutMs, classifyMutation, replaceOnce } from "../scripts/mutations";
+
+test("the mutation runner allows Ghost startup, a browser test, and graceful shutdown", () => {
+  const server = config.webServer;
+  assert.ok(server && !Array.isArray(server));
+  const startup = server.timeout ?? 60_000;
+  const testTimeout = config.timeout ?? 30_000;
+  const shutdown = server.gracefulShutdown?.timeout ?? 0;
+  assert.ok(browserMutationTimeoutMs >= startup + testTimeout + shutdown);
+});
 
 test("a mutation must change exactly one occurrence", () => {
   assert.equal(replaceOnce("a b c", "b", "z"), "a z c");

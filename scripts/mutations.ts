@@ -13,6 +13,8 @@ import { join, resolve } from "node:path";
 import { XMLParser } from "fast-xml-parser";
 import { type Mutation, mutations } from "./mutation-cases";
 
+export const browserMutationTimeoutMs = 10 * 60_000;
+
 export function replaceOnce(source: string, before: string, after: string) {
   const parts = source.split(before);
   if (parts.length !== 2 || before === after)
@@ -75,6 +77,7 @@ function runTests(work: string, target: Mutation[4], title: string) {
         "test",
         "--project=chromium",
         "--workers=1",
+        `--global-timeout=${browserMutationTimeoutMs}`,
         "--grep",
         pattern,
         "--reporter=junit",
@@ -94,7 +97,7 @@ function runTests(work: string, target: Mutation[4], title: string) {
     cwd: work,
     env,
     encoding: "utf8",
-    timeout: browser ? 240_000 : 60_000,
+    timeout: browser ? browserMutationTimeoutMs + 30_000 : 60_000,
   });
   const xml = existsSync(junit) ? readFileSync(junit, "utf8") : "";
   const verdict = classifyMutation(xml, r.status, title);
