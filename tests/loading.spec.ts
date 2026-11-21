@@ -56,6 +56,15 @@ test("a delayed portrait cover keeps the article text in place and displays the 
   const position = () => text.evaluate((element) => element.getBoundingClientRect().top);
   try {
     await page.goto("reading-room/", { waitUntil: "domcontentloaded" });
+    const styles = page.locator('link[rel~="stylesheet"]');
+    await expect
+      .poll(() =>
+        styles.evaluateAll(
+          (links) =>
+            links.length > 0 && links.every((link) => (link as HTMLLinkElement).sheet !== null),
+        ),
+      )
+      .toBe(true);
     await expect
       .poll(() =>
         text.evaluate((element) => {
