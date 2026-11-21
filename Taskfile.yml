@@ -1,7 +1,7 @@
 version: "3"
 
 vars:
-  BUN_IMAGE: oven/bun:1.4.4-alpine
+  BUN_IMAGE: oven/bun:1.4.5-alpine
   BUN_RUN: >-
     docker run --rm -u "$(id -u):$(id -g)" -e HOME=/tmp
     -v "$PWD:/work" -v "$PWD/.docker-modules:/work/node_modules"

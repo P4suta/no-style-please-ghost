@@ -59,6 +59,6 @@ test("long code lines remain readable without horizontal scrolling at 320 CSS pi
   await page.setViewportSize({ width: 320, height: 800 });
   await page.goto("reading-room/");
   const code = page.getByRole("article").locator("pre");
-  expect(await code.innerText()).toContain("long-code-line".repeat(30));
+  await expect(code).toHaveText("long-code-line".repeat(30));
   expect(await code.evaluate((block) => block.scrollWidth - block.clientWidth)).toBe(0);
 });

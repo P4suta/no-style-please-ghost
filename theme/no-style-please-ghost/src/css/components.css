@@ -15,10 +15,6 @@
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }
-.action:hover > span:not([aria-hidden]),
-.post-link:hover .row-title {
-  text-decoration-thickness: 2px;
-}
 .action[aria-current="page"] {
   font-weight: 750;
 }
@@ -87,6 +83,10 @@
 .row-title {
   flex: 1 1 11rem;
   font-size: clamp(1.375rem, 3vw, 1.875rem);
+}
+.action:hover > span:not([aria-hidden]),
+.post-link:hover .row-title {
+  text-decoration-thickness: 2px;
 }
 .post-link small {
   font: 0.9rem / 1.5 var(--sans);
