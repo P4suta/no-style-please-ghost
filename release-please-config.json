@@ -1,0 +1,21 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/v17.6.0/schemas/config.json",
+  "release-type": "simple",
+  "bootstrap-sha": "7f6f57f026b2024e163be8d784ac631737c8acd4",
+  "initial-version": "0.1.0",
+  "include-component-in-tag": false,
+  "draft": true,
+  "force-tag-creation": true,
+  "packages": {
+    ".": {
+      "package-name": "no-style-please-ghost",
+      "extra-files": [
+        {
+          "type": "json",
+          "path": "theme/no-style-please-ghost/package.json",
+          "jsonpath": "$.version"
+        }
+      ]
+    }
+  }
+}

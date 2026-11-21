@@ -1,0 +1,43 @@
+name: Verify release App access
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-release-access
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Verify the release App installation
+    if: github.ref == 'refs/heads/main' && github.ref_protected
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment: release-please
+    steps:
+      - name: Read the release App credentials
+        id: credentials
+        uses: dopplerhq/secrets-fetch-action@451892f16195f9ac360e1a5bcbf0b5fd0e957534 # v2.0.0
+        with:
+          doppler-token: ${{ secrets.DOPPLER_TOKEN }}
+          doppler-project: no-style-please-ghost
+          doppler-config: automation
+          inject-env-vars: false
+      - name: Mint a repository installation token
+        id: app
+        uses: actions/create-github-app-token@f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc # v3.4.0
+        with:
+          client-id: ${{ steps.credentials.outputs.GITHUB_APP_CLIENT_ID }}
+          private-key: ${{ steps.credentials.outputs.GITHUB_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name }}
+          permission-contents: read
+      - name: Verify the installation can read exactly this repository
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+        run: |
+          gh api installation/repositories |
+            jq -e --arg repository "$GITHUB_REPOSITORY" '.total_count == 1 and .repositories[0].full_name == $repository'
