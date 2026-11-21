@@ -151,11 +151,24 @@ jobs:
           done
           expected=$(cd dist && sha256sum -- "$zip" theme.cdx.json SHA256SUMS provenance.jsonl |
             jq -Rn '[inputs | capture("^(?<hash>[0-9a-f]{64})  (?<name>.+)$") | {name, digest: ("sha256:" + .hash)}]')
-          missing=$(jq -r --argjson expected "$expected" -f scripts/release-assets.jq "$RUNNER_TEMP/draft.json")
+          asset_plan() {
+            jq -r --arg mode "$1" --argjson expected "$expected" -f scripts/release-assets.jq "$RUNNER_TEMP/draft.json"
+          }
+          starters=$(asset_plan cleanup)
+          while IFS= read -r asset_id; do
+            if [[ -z "$asset_id" ]]; then continue; fi
+            check_draft
+            eligible=$(asset_plan cleanup)
+            if grep -Fxq -- "$asset_id" <<< "$eligible"; then
+              gh api --method DELETE "repos/$GITHUB_REPOSITORY/releases/assets/$asset_id"
+            fi
+          done <<< "$starters"
+          check_draft
+          missing=$(asset_plan missing)
           while IFS= read -r name; do
             if [[ -n "$name" ]]; then gh release upload "$TAG" "dist/$name" --repo "$GITHUB_REPOSITORY"; fi
           done <<< "$missing"
           check_draft
-          missing=$(jq -r --argjson expected "$expected" -f scripts/release-assets.jq "$RUNNER_TEMP/draft.json")
+          missing=$(asset_plan missing)
           test -z "$missing"
           gh api --method PATCH "$endpoint" -F draft=false | jq -e 'select(.draft == false and .immutable == true) | .html_url'

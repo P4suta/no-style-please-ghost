@@ -41,4 +41,10 @@ test("only a release proposal creates a draft and only the publication job can p
   assert.deepEqual(jobs.publish.needs, ["build", "attest"]);
   assert.equal(jobs.publish.environment, "release-publish");
   assert.deepEqual(jobs.publish.permissions, { contents: "write", attestations: "read" });
+  const publish = jobs.publish.steps.at(-1).run as string;
+  assert.match(publish, /check_draft\s+eligible=\$\(asset_plan cleanup\)/);
+  assert.match(
+    publish,
+    /gh api --method DELETE[^\n]+\n[\s\S]*?check_draft\s+missing=\$\(asset_plan missing\)[\s\S]*?gh release upload/,
+  );
 });

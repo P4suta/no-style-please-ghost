@@ -73,6 +73,8 @@ Before approving the `release-publish` environment, confirm that the version tag
 Check that the repository enforces Immutable Releases.
 
 If publication stops after uploading some files, rerun the failed job in the original build to keep its attestation bundle.
+The job removes a zero-byte starter for an expected filename and retries the upload.
+An existing completed file must match the expected digest.
 If the build dispatch fails before a build starts, select the version tag in **Publish the verified theme ZIP** and supply the numeric draft release ID.
 The workflow refuses a conflicting draft or an already published release.
 

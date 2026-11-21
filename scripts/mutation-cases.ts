@@ -15,6 +15,7 @@ const inventory = "scripts/release-archive.ts";
 const theme = "theme/no-style-please-ghost/";
 const identity = "only the requested draft";
 const retry = "a retry uploads only missing files";
+const cleanup = "cleanup selects only an expected empty starter";
 const sbom = "the release inventory";
 const zip = "the upload command builds a repeatable ZIP";
 
@@ -91,6 +92,8 @@ export const mutations: Mutation[] = [
   ["wrong draft digest", assets, ".digest == $asset.digest", "true", "release", retry],
   ["incomplete upload", assets, '.state == "uploaded"', "true", "release", retry],
   ["unknown asset", assets, ".name == $asset.name", "true", "release", retry],
+  ["nonempty asset removed", assets, ".size == 0", "true", "release", cleanup],
+  ["completed asset removed", assets, '.state == "starter"', "true", "release", cleanup],
   ["wrong theme name", inventory, "manifest.name !== theme", "false", "release", sbom],
   ["wrong theme version", inventory, " !== tag)", " === null)", "release", sbom],
   [

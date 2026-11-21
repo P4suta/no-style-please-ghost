@@ -19,8 +19,12 @@ const runFilter = (filter: string, args: string[], value: unknown) =>
   });
 const draft = (value: unknown, commit = source, id = "71") =>
   runFilter("release-draft", ["--arg", "source", commit, "--arg", "id", id], value);
-const remaining = (assets: unknown[]) =>
-  runFilter("release-assets", ["--argjson", "expected", JSON.stringify(expected)], { assets });
+const remaining = (assets: unknown[], mode = "missing") =>
+  runFilter(
+    "release-assets",
+    ["--argjson", "expected", JSON.stringify(expected), "--arg", "mode", mode],
+    { assets },
+  );
 const uploaded = expected.map((asset) => ({ ...asset, state: "uploaded" }));
 
 test("only the requested draft for the exact source and stable version can be built", () => {
@@ -60,6 +64,34 @@ test("a retry uploads only missing files with matching existing digests", () => 
   ]) {
     assert.notEqual(remaining([uploaded[0], invalid]).status, 0, JSON.stringify(invalid));
   }
+});
+
+test("cleanup selects only an expected empty starter and rejects every conflicting asset", () => {
+  const starter = { id: 83, name: "SHA256SUMS", state: "starter", size: 0, digest: null };
+  const cleanup = (assets: unknown[]) => remaining(assets, "cleanup");
+  const recover = cleanup([uploaded[0], starter]);
+  assert.equal(recover.status, 0, recover.stderr);
+  assert.equal(recover.stdout.trim(), "83");
+  const emptyDigest = `sha256:${createHash("sha256").update("").digest("hex")}`;
+  assert.equal(cleanup([{ ...starter, digest: emptyDigest }]).stdout.trim(), "83");
+  assert.equal(cleanup(uploaded).stdout.trim(), "");
+  assert.notEqual(remaining([uploaded[0], starter]).status, 0);
+  for (const patch of [
+    { size: 1 },
+    { size: null },
+    { id: 0 },
+    { id: 2.5 },
+    { id: "83" },
+    { state: "uploaded" },
+    { name: "other.zip" },
+    { digest: uploaded[0].digest },
+  ]) {
+    const refused = cleanup([uploaded[0], { ...starter, ...patch }]);
+    assert.notEqual(refused.status, 0, JSON.stringify(patch));
+    assert.equal(refused.stdout, "");
+  }
+  assert.notEqual(cleanup([starter, { ...uploaded[0], digest: "different" }]).status, 0);
+  assert.notEqual(cleanup([starter, { ...starter, id: 84 }]).status, 0);
 });
 
 const font = strToU8("fixture font");
