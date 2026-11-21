@@ -1,0 +1,18 @@
+{{{html}}}
+<aside class="access-note">
+    {{#has visibility="paid"}}
+        <h2>{{t "Paid members only"}}</h2>
+    {{else has visibility="tiers"}}
+        <h2>{{t "Paid members only"}}{{tiers prefix=" · " suffix="" lastSeparator=", "}}</h2>
+    {{else}}
+        {{#is "page"}}<h2>{{t "Members only"}}</h2>{{else}}<h2>{{t "This post is for subscribers only"}}</h2>{{/is}}
+    {{/has}}
+    {{#if @site.members_enabled}}
+        {{#if @member}}
+            <a class="action" href="#/portal/account/plans"><span aria-hidden="true">→</span><span>{{t "View plans"}}</span></a>
+        {{else}}
+            {{#if @site.allow_self_signup}}<a class="action" href="#/portal/signup"><span aria-hidden="true">＋</span><span>{{t "Subscribe"}}</span></a>{{/if}}
+            <a class="action" href="#/portal/signin"><span aria-hidden="true">→</span><span>{{t "Sign in"}}</span></a>
+        {{/if}}
+    {{/if}}
+</aside>

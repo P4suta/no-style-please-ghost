@@ -1,25 +1,13 @@
 {{!< default}}
 
-{{> back-link}}
-
-{{#tag}}
-  <h1>{{name}}</h1>
-
-  {{#if feature_image}}
-    {{> "components/feature-image"
-      image=feature_image
-      fallback_alt=name}}
-  {{/if}}
-
-  {{#if description}}
-    <p>{{description}}</p>
-  {{/if}}
-
-  {{#if count.posts}}
-    <p class="tag-meta">{{count.posts}}</p>
-  {{/if}}
-{{/tag}}
-
-{{> post-list}}
-
-{{pagination}}
+<div class="frame archive">
+    {{#tag}}
+        <header class="archive-heading">
+            <h1>{{name}}</h1>
+            {{#if description}}<p>{{description}}</p>{{/if}}
+            {{#if feature_image}}{{> "components/feature-image" image=feature_image}}{{/if}}
+        </header>
+    {{/tag}}
+    {{> post-list items=posts}}
+    {{pagination}}
+</div>

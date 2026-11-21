@@ -1,12 +1,15 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.4.12/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.6.8/schema.json",
   "files": {
     "includes": [
-      "**/*.{json,jsonc,css}",
+      "**/*.{json,jsonc,css,ts}",
       "!**/node_modules",
       "!theme/no-style-please-ghost/assets/css/style.css",
       "!theme/no-style-please-ghost/assets/fonts",
-      "!bun.lock"
+      "!bun.lock",
+      "!**/.docker-modules",
+      "!**/test-results",
+      "!**/dist"
     ]
   },
   "formatter": {
@@ -19,7 +22,7 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
+      "preset": "recommended"
     }
   },
   "css": {

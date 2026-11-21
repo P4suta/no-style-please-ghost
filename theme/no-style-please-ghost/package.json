@@ -1,6 +1,6 @@
 {
   "name": "no-style-please-ghost",
-  "description": "A (nearly) no-CSS, fast, minimalist Ghost theme. Ported from riggraz/no-style-please.",
+  "description": "A monochrome reading theme for Ghost, with dated archives and a single-column article layout.",
   "version": "0.1.0",
   "engines": {
     "ghost": ">=6.0.0"
@@ -55,7 +55,7 @@
           "System sans-serif",
           "System serif"
         ],
-        "default": "Monospace (original)"
+        "default": "System serif"
       },
       "body_font": {
         "type": "select",
@@ -67,7 +67,7 @@
           "System sans-serif",
           "System serif"
         ],
-        "default": "Monospace (original)"
+        "default": "System serif"
       }
     }
   }

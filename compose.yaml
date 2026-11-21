@@ -1,8 +1,5 @@
 name: no-style-please-ghost
 
-# Base stack for Ghost theme development. Tagging only pins the major
-# version so Dependabot's docker ecosystem can raise PRs on new minors.
-
 services:
   ghost:
     image: ghost:6-alpine
@@ -19,18 +16,15 @@ services:
       database__connection__password: ${MYSQL_PASSWORD}
       database__connection__database: ${MYSQL_DATABASE}
       NODE_ENV: ${NODE_ENV:-development}
-    # Base stack deliberately omits the theme bind-mount so `task up`
-    # matches the distribution experience: a fresh Ghost install with
-    # no theme pre-provisioned. `compose.override.yaml` re-adds the
-    # bind-mount for `task dev`, which is the hot-edit workflow.
     volumes:
       - ghost-content:/var/lib/ghost/content
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:2368/"]
+      test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:2368/"]
       interval: 30s
       timeout: 5s
       retries: 5
-      start_period: 60s
+      start_period: ${GHOST_START_PERIOD:-45m}
+      start_interval: 5s
     restart: unless-stopped
 
   mysql:
@@ -44,20 +38,15 @@ services:
       - mysql-data:/var/lib/mysql
     healthcheck:
       test:
-        [
-          "CMD",
-          "mysqladmin",
-          "ping",
-          "-h",
-          "localhost",
-          "-u",
-          "root",
-          "--password=${MYSQL_ROOT_PASSWORD}",
-        ]
+        - CMD-SHELL
+        - >-
+          MYSQL_PWD="$${MYSQL_PASSWORD}" mysql --protocol=TCP --host=127.0.0.1
+          --user="$${MYSQL_USER}" --database="$${MYSQL_DATABASE}" --execute="SELECT 1"
       interval: 10s
       timeout: 5s
       retries: 10
-      start_period: 30s
+      start_period: ${MYSQL_START_PERIOD:-10m}
+      start_interval: 5s
     restart: unless-stopped
 
 volumes:

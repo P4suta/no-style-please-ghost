@@ -1,0 +1,20 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "npm": {
+    "ignorePaths": [
+      "**/node_modules/**",
+      "**/bower_components/**",
+      "theme/no-style-please-ghost/package.json"
+    ]
+  },
+  "customManagers": [
+    {
+      "customType": "jsonata",
+      "fileFormat": "json",
+      "managerFilePatterns": ["theme/no-style-please-ghost/package.json"],
+      "matchStrings": ["engines.ghost.{ 'depName': 'ghost', 'currentValue': $ }"],
+      "datasourceTemplate": "npm",
+      "versioningTemplate": "npm"
+    }
+  ]
+}

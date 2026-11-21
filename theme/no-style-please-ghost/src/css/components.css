@@ -1,152 +1,150 @@
-/* Ghost feature components. Every rule is deliberately plain: no colors
- * beyond currentColor, no decorative icons, no transitions. The
- * dark-mode trick in dark-mode.css does the heavy lifting — it inverts
- * form controls, buttons, and borders along with the rest of the page,
- * so these rules only need to be correct in the light palette.
- */
+.action,
+.post-link {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 3rem;
+  min-inline-size: 3rem;
+  gap: 0.45em;
+  text-decoration: none;
+}
+.action {
+  font: 1.125rem / 1.45 var(--sans);
+}
+.action > span:not([aria-hidden]),
+.row-title {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.action[aria-current="page"] {
+  font-weight: 750;
+}
+.publication {
+  font-family: var(--gh-font-heading, var(--heading, var(--serif)));
+  font-weight: bold;
+}
+.nav-icon {
+  inline-size: 1em;
+  block-size: 1em;
+  object-fit: contain;
+}
+.search {
+  padding: 0 0.3em;
+  border: 0;
+  background: var(--paper);
+}
+.magnifier {
+  position: relative;
+  inline-size: 0.8em;
+  block-size: 0.8em;
+  border: 2px solid;
+  border-radius: 50%;
+  margin-inline-end: 0.2em;
+}
+.magnifier::after {
+  content: "";
+  position: absolute;
+  inline-size: 0.45em;
+  border-block-start: 2px solid;
+  inset-inline-start: 78%;
+  inset-block-start: 100%;
+  transform: rotate(45deg);
+}
+.skip-link {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: var(--gutter);
+  z-index: 1;
+  padding: 0 1rem;
+  border: 2px solid;
+  background: var(--paper);
+  transform: translateY(-140%);
+}
+.skip-link:focus {
+  transform: none;
+}
+.post-list {
+  border-block-start: 2px solid;
+}
+.post-list li {
+  display: grid;
+  grid-template-columns: 8rem minmax(0, 1fr);
+  align-items: baseline;
+  column-gap: 1rem;
+  border-block-end: 1px solid;
+  padding-block: 0.5rem;
+}
+.post-link {
+  display: flex;
+  flex-wrap: wrap;
+  padding-block: 0.4rem;
+  font-family: var(--gh-font-heading, var(--heading, var(--serif)));
+  line-height: 1.3;
+}
+.row-title {
+  flex: 1 1 11rem;
+  font-size: clamp(1.375rem, 3vw, 1.875rem);
+}
+.action:hover > span:not([aria-hidden]),
+.post-link:hover .row-title {
+  text-decoration-thickness: 2px;
+}
+.post-link small {
+  font: 0.9rem / 1.5 var(--sans);
+}
+.direction {
+  margin-inline-start: auto;
+}
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-block-start: 1.5rem;
+}
+.empty,
+.access-note {
+  padding-block: 1.5rem;
+  border-block: 1px solid;
+}
+.access-note .action {
+  margin-inline-end: 1rem;
+}
+.adjacent {
+  display: flex;
+  gap: 1rem;
+  margin-block: 0.75rem;
+}
+.adjacent small {
+  display: block;
+  font-family: var(--sans);
+}
+.related {
+  margin-block-start: 2.5rem;
+}
+[dir="rtl"] .direction {
+  transform: scaleX(-1);
+}
 
-@layer components {
-  /* Shared list-strip for `<ul>` inside `.read-next` or the footer nav.
-   * `:where()` keeps specificity at (0, 0, 1); kept at the top of the
-   * component layer so later, more-specific rules (`.site-footer nav
-   * ul { display: flex }`) cascade normally without triggering
-   * descending-specificity warnings.
-   */
-  :where(.read-next, .site-footer nav) ul {
-    list-style: none;
-    padding: 0;
+@media (max-width: 38rem) {
+  .post-list li {
+    grid-template-columns: minmax(0, 1fr);
   }
-
-  /* Members-only sigil appended in post-list.hbs. Slightly dimmed to
-   * read as metadata without adding a colored badge.
-   */
-  .members-only {
-    opacity: 0.7;
+  .post-list time {
+    margin-block-start: 0.25rem;
   }
-
-  /* Tag / author archive meta (post count line). */
-  .tag-meta,
-  .author-meta {
-    opacity: 0.7;
-    font-size: 0.9em;
+  .post-link {
+    padding-block: 0.25rem;
   }
-
-  /* Featured homepage block. `featured:true` posts above the main feed. */
-  .featured {
-    margin-bottom: 2rem;
+  .site-bar,
+  .nav-links,
+  .footer-links {
+    column-gap: 0.8rem;
   }
-
-  /* Post footer — author byline + tag list live here. */
-  .post-footer {
-    margin-top: 2rem;
-    padding-top: 1rem;
-    border-top: thin solid currentColor;
-  }
-
-  .post-author,
-  .post-tags {
-    margin: 0.5rem 0;
-  }
-
-  /* Paywall CTA shown when @member cannot access gated content. */
-  .paywall {
-    margin: 2rem 0;
-    padding: 1rem;
-    border: thin solid currentColor;
-    text-align: center;
-
-    & p {
-      margin: 0.5rem 0;
-    }
-  }
-
-  /* Prev/next post navigation under the article. */
-  .post-navigation {
-    margin-top: 3rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  /* "Read next" related posts. */
-  .read-next {
-    margin-top: 3rem;
-  }
-
-  /* Pagination nav (partials/pagination.hbs). */
-  nav.pagination {
-    margin: 3rem 0;
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-  }
-
-  /* Site-wide footer. Contains the newsletter form, portal links, and a
-   * "Powered by Ghost" attribution.
-   */
-  .site-footer {
-    margin-top: 4rem;
-    padding-top: 2rem;
-    border-top: thin solid currentColor;
-
-    & section {
-      margin-bottom: 1.5rem;
-    }
-
-    & nav ul {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin: 1rem 0;
-    }
-
-    & nav li {
-      margin: 0;
-    }
-
-    /* Newsletter + search form controls. `background` + `color` are set
-     * explicitly (rather than inheriting) so the dark-mode `filter:
-     * invert` flips both together and the input stays readable.
-     */
-    & form {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      align-items: baseline;
-
-      & label {
-        display: block;
-        width: 100%;
-      }
-    }
-
-    & input[type="email"] {
-      flex: 1 1 auto;
-      min-width: 200px;
-      padding: 0.4rem;
-      border: thin solid currentColor;
-      background: white;
-      color: black;
-      font: inherit;
-    }
-
-    & button {
-      padding: 0.4rem 0.8rem;
-      border: thin solid currentColor;
-      background: white;
-      color: black;
-      font: inherit;
-      cursor: pointer;
-    }
-  }
-
-  /* Search toggle outside the site footer context (same visual). */
-  button[data-ghost-search] {
-    padding: 0.4rem 0.8rem;
-    border: thin solid currentColor;
-    background: white;
-    color: black;
-    font: inherit;
-    cursor: pointer;
+}
+@media (scripting: none) {
+  .search,
+  .action[href^="#/portal/"] {
+    display: none;
   }
 }

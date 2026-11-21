@@ -1,35 +1,187 @@
-/* Container + Ghost Koenig editor width modifiers. Deliberately minimal —
- * the no-style-please philosophy is to stay close to browser defaults.
- */
+.frame,
+.measure,
+.cover {
+  inline-size: calc(100% - 2 * var(--gutter));
+  margin-inline: auto;
+}
+.frame,
+.cover {
+  max-inline-size: var(--frame);
+}
+.measure {
+  max-inline-size: var(--measure);
+}
+.site-bar,
+.site-footer,
+.footer-links,
+.nav-links,
+.author-links,
+.tags,
+.dateline {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0 1.25rem;
+}
+.site-bar {
+  min-block-size: 4.5rem;
+  padding-block: 0.5rem;
+  border-block-end: 2px solid;
+}
+.site-bar nav {
+  min-inline-size: 0;
+}
+.search {
+  margin-inline-start: auto;
+}
+.site-footer {
+  justify-content: space-between;
+  margin-block: clamp(3rem, 9vw, 7rem) 2rem;
+  border-block-start: 2px solid;
+  padding-block-start: 0.75rem;
+}
+.footer-links {
+  margin-inline-start: auto;
+}
+.nav-links,
+.post-list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.masthead,
+.archive-heading,
+.article-heading,
+.error-page {
+  padding-block: clamp(2rem, 7vw, 5rem);
+}
+.masthead h1 {
+  font-size: clamp(3.25rem, 9vw, 7rem);
+  font-weight: 700;
+  line-height: 1;
+}
+.masthead-logo {
+  block-size: clamp(2.25rem, 6vw, 4rem);
+  inline-size: min(100%, 18rem);
+  object-fit: contain;
+  object-position: left center;
+  margin-block-end: 1.25rem;
+}
+[dir="rtl"] .masthead-logo {
+  object-position: right center;
+}
+.masthead p,
+.archive-heading p,
+.article-heading p {
+  max-inline-size: var(--measure);
+  margin-block-start: 1rem;
+  font-size: clamp(1.125rem, 2.4vw, 1.5rem);
+}
+.featured,
+.related {
+  margin-block-end: 3.5rem;
+}
+.archive h2,
+.related h2 {
+  margin-block-end: 0.75rem;
+}
+.article-heading {
+  padding-block-end: 2rem;
+}
+.article-heading h1 {
+  margin-block: 0.5rem;
+}
+.byline {
+  margin-block-start: 1rem;
+}
+.dateline,
+.post-list time,
+.page-number,
+.status-code {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+.dateline,
+.post-list time,
+.page-number {
+  font-size: 0.95rem;
+}
+.cover {
+  margin-block: 1.5rem 2.5rem;
+}
+.cover img {
+  inline-size: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: contain;
+}
+.portrait {
+  margin-block-end: 1rem;
+  object-fit: cover;
+}
+.tags,
+.afterword {
+  margin-block-start: 2rem;
+}
+.error-page .action {
+  margin-block-start: 1rem;
+}
 
-@layer layout {
-  .w {
-    max-width: 640px;
-    margin: 0 auto;
-    padding: 4rem 2rem;
-  }
-
-  .kg-width-wide,
-  .kg-width-wide img {
-    max-width: 85vw;
-  }
-
-  .kg-width-full,
-  .kg-width-full img {
-    max-width: 100vw;
-  }
-
-  figure {
-    margin: 1.5rem 0;
-  }
-
-  figcaption {
-    text-align: center;
-    font-size: 0.9em;
-    margin-top: 0.4rem;
-  }
-
-  .post-meta {
-    text-align: right;
-  }
+.reading-scroll {
+  display: contents;
+}
+.reading-scroll:has(table) {
+  display: block;
+  overflow-x: auto;
+  outline-offset: -3px;
+}
+.prose {
+  display: grid;
+  grid-template-columns: minmax(var(--gutter), 1fr) minmax(0, var(--measure)) minmax(
+      var(--gutter),
+      1fr
+    );
+}
+.prose > * {
+  grid-column: 2;
+  min-inline-size: 0;
+  margin-block: 0;
+}
+.prose > * + * {
+  margin-block-start: 1.75rem;
+}
+.prose > p + p {
+  margin-block-start: 2.625em;
+}
+.prose > :is(h2, h3) {
+  margin-block-start: 2.25em;
+}
+.prose > .kg-width-wide,
+.prose > .kg-width-full {
+  grid-column: 1 / -1;
+}
+.prose > .kg-width-wide {
+  inline-size: min(var(--frame), calc(100% - 2 * var(--gutter)));
+  justify-self: center;
+}
+.prose > .kg-width-full {
+  inline-size: 100%;
+}
+.prose :is(.kg-width-wide, .kg-width-full) .kg-image {
+  inline-size: 100%;
+}
+.prose > .kg-width-full:not(.kg-card-hascaption) + .kg-width-full {
+  margin-block-start: 0;
+}
+.prose table {
+  min-inline-size: min-content;
+}
+.prose > :first-child {
+  margin-block-start: 0;
+}
+.page-template
+  .reading:has(> .reading-scroll:first-child .prose > :first-child:not(.kg-width-full)) {
+  padding-block-start: 2.5rem;
+}
+.page-template:has(.prose > .kg-width-full:last-child:not(.kg-card-hascaption)) .site-footer {
+  margin-block-start: 0;
 }
